@@ -1,4 +1,4 @@
-##########################################################################################
+  ##########################################################################################
 # Data 2020-06-03
 # Authot: Luis Soares (ldiass@live.com)
 ##########################################################################################
@@ -23,7 +23,7 @@ if(!(require(limma))){
 }
 
 
-##' listspecies
+## listspecies
 ##' @return a data.frame containing the name of species and the code used on autoGO
 ##' @exemples listspecies()
 ##' @export
@@ -42,16 +42,15 @@ listspecies <- function() {
 }
 
 
-##' geneIDAdvise
-##' Intern function to format the print output
-internenv<-new.env()
-internenv$geneIDAdvise <-
+## geneIDAdvise
+## Intern function to format the print output
+geneIDAdvise <-
   function(x) {
     print(paste("Got gene ID on column:", x))
   }
 
 
-##' automatic_GO_enrich
+## automatic_GO_enrich
 ##' The main function of the package that will iterate the list of file names to run the GO analysis
 ##' @param x the data.frame or vector that will contain the name/path of files of differentially expressed genes
 ##' @param spcode a char of the species code of the gene entries. Call listspecies() to look for the species code available
@@ -189,23 +188,23 @@ automatic_GO_enrich <-
 
       #Find the column of Gene IDs on the dataset
       if (!(genekeyPos == 0)) {
-        internenv$geneIDAdvise(genekeyPos)
+        geneIDAdvise(genekeyPos)
       } else if (length(grep("ensembl", keytype, ignore.case = TRUE)) > 0 &&
                  length(grep("ens", colnames(DEGTable), ignore.case = TRUE)) > 0) {
         genekeyPos = as.numeric(grep("ensembl", colnames(DEGTable), ignore.case = TRUE))
-        internenv$geneIDAdvise(genekeyPos)
+        geneIDAdvise(genekeyPos)
       } else if (keytype == 'ENTREZID' &&
                  length(grep("entrez", colnames(DEGTable), ignore.case = TRUE)) > 0) {
         genekeyPos = as.numeric(grep("entrez", colnames(DEGTable)))
-        internenv$geneIDAdvise(genekeyPos)
+        geneIDAdvise(genekeyPos)
       } else if (keytype == 'SYMBOL' &&
                  length(grep("symbol", colnames(DEGTable), ignore.case = TRUE)) > 0) {
         genekeyPos = as.numeric(grep("symbol", colnames(DEGTable)))
-        internenv$geneIDAdvise(genekeyPos)
+        geneIDAdvise(genekeyPos)
       } else if (keytype == 'REFSEQ' &&
                  length(grep("refseq", colnames(DEGTable), ignore.case = TRUE)) > 0) {
         genekeyPos = as.numeric(grep("refseq", colnames(DEGTable)))
-        internenv$geneIDAdvise(genekeyPos)
+        geneIDAdvise(genekeyPos)
       }
       else{
         stop("Not possible to find the column of geneID automatically, please set it manually")
