@@ -1,0 +1,12 @@
+Package: autoGO
+Type: Package
+Title: Automatization of GO ontology with ClusterProfiler and EnrichKEGG using most recent annotations
+Version: 0.1.0
+Author: person("Luis","Soares",role="aut", email="ldiass@live.com", comment=c(ORCID="0000-0003-2537-8571"))
+Maintainer: The package maintainer <ldiass@live.com>
+Description: autoGO package was develop to automatization of gene ontology enrichment. With a one-step call, it will perform the enrichment, with the most recent gene annotation available, create plain tables and dotplots for results and do all the data management to make this possible.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+imports: limma, data.table, ggplot2, KEGGprofile, dplyr, clusterProfiler
+RoxygenNote: 7.1.0
