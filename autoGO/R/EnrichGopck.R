@@ -67,7 +67,7 @@ geneIDAdvise <-
 
 automatic_GO_enrich <-
   function(x = dir(),
-           spcode,
+           spcode="",
            keytype = "ENSEMBL",
            orderby="",
            dotplotgenes = 30,
@@ -81,7 +81,8 @@ automatic_GO_enrich <-
            GOMF = TRUE,
            GOCC = TRUE,
            writeTable = TRUE,
-           writeplot = TRUE) {
+           writeplot = TRUE,
+           tableseps=",") {
     #Confirm filelist type
     filelist<-x
     filelist <- as.character(as.vector(filelist))
@@ -169,7 +170,7 @@ automatic_GO_enrich <-
       tryCatch({
       print(paste("File loaded:", filename))
       #Input datafile
-      DEGTable <- read.delim(filename, stringsAsFactors = FALSE)
+      DEGTable <- read.delim(filename, stringsAsFactors = FALSE, sep=tableseps)
 
       #Check if the table must be reordered
       if(!orderby==""){
@@ -189,9 +190,8 @@ automatic_GO_enrich <-
       #Find the column of Gene IDs on the dataset
       if (!(genekeyPos == 0)) {
         geneIDAdvise(genekeyPos)
-      } else if (length(grep("ensembl", keytype, ignore.case = TRUE)) > 0 &&
-                 length(grep("ens", colnames(DEGTable), ignore.case = TRUE)) > 0) {
-        genekeyPos = as.numeric(grep("ensembl", colnames(DEGTable), ignore.case = TRUE))
+      } else if (length(grep("ens", keytype, ignore.case = TRUE)) > 0) {
+        genekeyPos = as.numeric(grep("ens", colnames(DEGTable), ignore.case = TRUE))
         geneIDAdvise(genekeyPos)
       } else if (keytype == 'ENTREZID' &&
                  length(grep("entrez", colnames(DEGTable), ignore.case = TRUE)) > 0) {
@@ -207,7 +207,7 @@ automatic_GO_enrich <-
         geneIDAdvise(genekeyPos)
       }
       else{
-        stop("Not possible to find the column of geneID automatically, please set it manually")
+        stop("Not possible to find the column of geneID automatically, please set it manually with the parameter genekeyPos")
       }
 
       #Get the Entrez ID
@@ -402,9 +402,9 @@ automatic_GO_enrich <-
         dev.off()
       }
 
-      if (GOMF && writeplot) {
+      if (GOCC && writeplot) {
         egocc <- enrichGO(
-          gene = DEGTable[, genekeyPos],
+          gene = genes,
           OrgDb = myOrgDb,
           ont = 'CC',
           pAdjustMethod = 'BH',
