@@ -196,6 +196,7 @@ automatic_GO_enrich <-
       #Create a vector of Entrez ID values, removing NA and duplicates
       genes <-
         DEGTable$Entrez[!(is.na(DEGTable$Entrez))]
+      print(paste(nrow(genes)," genes mapped") 
 
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
 
@@ -209,6 +210,10 @@ automatic_GO_enrich <-
             download_latest = TRUE,
             returned_pvalue = GO_pvalue
           )
+        if(nrow(keggResult$stastic)==0){
+          print("No enriched KEGG pathways found") 
+          }
+        else{
         keggResult$stastic <-
           keggResult$stastic[order(keggResult$stastic$pvalueAdj),]
 
@@ -295,6 +300,7 @@ automatic_GO_enrich <-
 
           dev.off()
         }
+          }
         print("KEGG done!")
       }
 
