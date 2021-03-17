@@ -210,7 +210,7 @@ automatic_GO_enrich <-
             download_latest = TRUE,
             returned_pvalue = GO_pvalue
           )
-        print(" KEGG pathways found"))
+        print(" KEGG pathways found")
         if(nrow(keggResult$stastic)==0){
           print("No enriched KEGG pathways found") 
           }else{
