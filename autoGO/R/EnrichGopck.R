@@ -196,7 +196,7 @@ automatic_GO_enrich <-
       #Create a vector of Entrez ID values, removing NA and duplicates
       genes <-
         DEGTable$Entrez[!(is.na(DEGTable$Entrez))]
-      print(paste(nrow(genes)," genes mapped") 
+      print(paste(nrow(genes)," genes mapped"))
 
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
 
