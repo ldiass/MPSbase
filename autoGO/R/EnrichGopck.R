@@ -196,9 +196,16 @@ automatic_GO_enrich <-
       #Create a vector of Entrez ID values, removing NA and duplicates
       genes <-
         DEGTable$Entrez[!(is.na(DEGTable$Entrez))]
-      print(paste(nrow(genes)," genes mapped"))
-
+      
+        print(paste(nrow(genes)," genes mapped")
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
+              
+        if(nrow(genes)>0){
+          print(paste(nrow(genes)," genes mapped"))
+          }else{
+          print("No gene could be mapped, you should try another type of identification")
+          next
+         }
 
       if (KEGG) {
         print("Running KEGG!")
