@@ -212,10 +212,9 @@ automatic_GO_enrich <-
           )
         if(nrow(keggResult$stastic)==0){
           print("No enriched KEGG pathways found") 
-          }
-        else{
+          }else{
           print(paste(nrow(keggResult$stastic), " KEGG pathways found"))
-        keggResult$stastic <-
+          keggResult$stastic <-
           keggResult$stastic[order(keggResult$stastic$pvalueAdj),]
 
         #Adding species to the ID
@@ -301,7 +300,7 @@ automatic_GO_enrich <-
 
           dev.off()
         }
-          }
+        }
         print("KEGG done!")
       }
 
