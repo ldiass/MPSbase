@@ -3,29 +3,8 @@
 # Authot: Luis Soares (ldiass@live.com)
 ##########################################################################################
 
-if(!(require(clusterProfiler))){
-  stop("Please install clusterProfiler")
-}
-if(!(require(dplyr))){
-  stop("Please install clusterProfiler")
-}
-if(!(require(KEGGprofile))){
-  stop("Please install KEGGprofile")
-}
-if(!(require(ggplot2))){
-  stop("Please install ggplot2")
-}
-if(!(require(data.table))){
-  stop("Please install data.table")
-}
-if(!(require(limma))){
-  stop("Please install limma")
-}
-
-
 ## listspecies
 ##' @return a data.frame containing the name of species and the code used on autoGO
-##' @exemples listspecies()
 ##' @export
 listspecies <- function() {
   species.df <-
@@ -123,7 +102,7 @@ automatic_GO_enrich <-
     #Checkspecies
     if (c('mmu') == c(spcode)) {
       if (!requireNamespace("org.Mm.eg.db", quietly = TRUE)) {
-        BiocManager::install(org.Mm.eg.db)
+        BiocManager::install("org.Mm.eg.db")
       }
       library(org.Mm.eg.db)
       myOrgDb <- org.Mm.eg.db
@@ -131,7 +110,7 @@ automatic_GO_enrich <-
 
     else if (c('hsa') == c(spcode)) {
       if (!requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
-        BiocManager::install(org.Hs.eg.db)
+        BiocManager::install("org.Hs.eg.db")
       }
       library(org.Hs.eg.db)
       myOrgDb <- org.Hs.eg.db
@@ -139,7 +118,7 @@ automatic_GO_enrich <-
 
     else if (c(spcode) == c('rno')) {
       if (!requireNamespace("org.Rn.eg.db", quietly = TRUE)) {
-        BiocManager::install(org.Rn.eg.db)
+        BiocManager::install("org.Rn.eg.db")
       }
       library(org.Rn.eg.db)
       myOrgDb <- org.Rn.eg.db
@@ -147,7 +126,7 @@ automatic_GO_enrich <-
 
     else if (c(spcode) == c('cfa')) {
       if (!requireNamespace("org.Cf.eg.db", quietly = TRUE)) {
-        BiocManager::install(org.Cf.eg.db)
+        BiocManager::install("org.Cf.eg.db")
       }
       library(org.Cf.eg.db)
       myOrgDb <- org.Cf.eg.db
@@ -156,8 +135,8 @@ automatic_GO_enrich <-
       stop("Species not found, type listspecies() to show all species codes available.")
     }
 
-    #Create the gene anotation for the specific species
-    keys <- keys(myOrgDb)
+    #Create the gene annotation for the specific species
+    keys <- AnnotationDbi::keys(myOrgDb)
     geneAnotation <-
       AnnotationDbi::select(
         myOrgDb,
@@ -218,13 +197,13 @@ automatic_GO_enrich <-
       genes <-
         DEGTable$Entrez[!(is.na(DEGTable$Entrez))]
 
-      genes <- distinct(as.data.frame(genes), .keep_all = TRUE)
+      genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
 
       if (KEGG) {
         print("Running KEGG")
         #Run Keggprofile
         keggResult <-
-          find_enriched_pathway(
+          KEGGprofile::find_enriched_pathway(
             as.matrix(genes),
             species = spcode,
             download_latest = TRUE,
@@ -284,30 +263,34 @@ automatic_GO_enrich <-
 
           mydata$Pathway_Name <-
             factor(mydata$Pathway_Name, levels = mydata$Pathway_Name[order(mydata$TransP)])
+          ggplot2::theme_set(
+            ggplot2::theme_linedraw() +
+              ggplot2::theme(legend.position = "right")
+          )
           myplot <-
-            ggplot(
+            ggplot2::ggplot(
               mydata[1:dotplotgenes,],
-              aes_string(
+              ggplot2::aes_string(
                 x = 'Percentage',
                 y = "Pathway_Name",
                 size = 'Gene_Found',
                 color = 'TransP'
               )
             ) +
-            geom_point() +
-            scale_color_continuous(
+            ggplot2::geom_point() +
+            ggplot2::scale_color_continuous(
               low = "red",
               high = "blue",
               name = '-log(FDR)',
-              guide = guide_colorbar(reverse = TRUE)
+              guide = ggplot2::guide_colorbar(reverse = TRUE)
             ) +
-            ylab(NULL) + theme(axis.text.y = element_text(
+            ggplot2::ylab(NULL) + ggplot2::theme(axis.text.y = ggplot2::element_text(
               size = 12,
               angle = 0,
               hjust = 1,
               vjust = 0,
               face = "plain"
-            ))   + scale_size(range = c(3, 8))
+            ))   + ggplot2::scale_size(range = c(3, 8))
           print(myplot)
 
           dev.off()
@@ -321,7 +304,7 @@ automatic_GO_enrich <-
       if (GOALL) {
         print("Runnnig enrichGO all")
 
-        ego <- enrichGO(
+        ego <- clusterProfiler::enrichGO(
           gene = genes,
           keyType = "ENTREZID",
           OrgDb = myOrgDb,
@@ -347,7 +330,7 @@ automatic_GO_enrich <-
 
       if (GOBP && writeplot) {
         print("Running enrichGO BP dotplot")
-        egobp <- enrichGO(
+        egobp <- clusterProfiler::enrichGO(
           gene = genes,
           OrgDb = myOrgDb,
           ont = 'BP',
@@ -358,14 +341,14 @@ automatic_GO_enrich <-
 
         print("enrichGO BP done")
         egobp <-
-          simplify(egobp,
+          clusterProfiler::simplify(egobp,
                    cutoff = 0.7,
                    by = "p.adjust",
                    select_fun = min)
         print("enrichGO BP simplify done")
         pdf(paste(filename, "_bp.pdf", sep = ""))
         myplot <-
-          dotplot(
+          clusterProfiler::dotplot(
             egobp,
             showCategory = dotplotgenes,
             font.size = fontSize
@@ -376,7 +359,7 @@ automatic_GO_enrich <-
 
       if (GOMF && writeplot) {
         print("Running enrichGO MF dotplot")
-        egomf <- enrichGO(
+        egomf <- clusterProfiler::enrichGO(
           gene = genes,
           OrgDb = myOrgDb,
           ont = 'MF',
@@ -386,14 +369,14 @@ automatic_GO_enrich <-
         )
         print("enrichGO MF done")
         egomf <-
-          simplify(egomf,
+          clusterProfiler::simplify(egomf,
                    cutoff = 0.7,
                    by = "p.adjust",
                    select_fun = min)
         print("enrichGO MF simplify done")
         pdf(paste(filename, "_mf.pdf", sep = ""))
         myplot <-
-          dotplot(
+          clusterProfiler::dotplot(
             egomf,
             showCategory = dotplotgenes,
             font.size = fontSize
@@ -403,7 +386,7 @@ automatic_GO_enrich <-
       }
 
       if (GOCC && writeplot) {
-        egocc <- enrichGO(
+        egocc <- clusterProfiler::enrichGO(
           gene = genes,
           OrgDb = myOrgDb,
           ont = 'CC',
@@ -413,14 +396,14 @@ automatic_GO_enrich <-
         )
         print("enrichGO CC done")
         egocc <-
-          simplify(egocc,
+          clusterProfiler::simplify(egocc,
                    cutoff = 0.7,
                    by = "p.adjust",
                    select_fun = min)
         print("enrichGO CC simplify done")
         pdf(paste(filename, "_cc.pdf", sep = ""))
         myplot <-
-          dotplot(
+          clusterProfiler::dotplot(
             egocc,
             showCategory = dotplotgenes,
             font.size = fontSize
