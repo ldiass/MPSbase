@@ -201,7 +201,7 @@ automatic_GO_enrich <-
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
 
       if (KEGG) {
-        print("KEGG")
+        print("Running KEGG!")
         #Run Keggprofile
         keggResult <-
           KEGGprofile::find_enriched_pathway(
@@ -209,8 +209,7 @@ automatic_GO_enrich <-
             species = spcode,
             download_latest = TRUE,
             returned_pvalue = GO_pvalue
-          )
-        print(" KEGG pathways found")
+          )        
         if(nrow(keggResult$stastic)==0){
           print("No enriched KEGG pathways found") 
           }else{
