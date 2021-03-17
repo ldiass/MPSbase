@@ -214,7 +214,7 @@ automatic_GO_enrich <-
           print("No enriched KEGG pathways found") 
           }
         else{
-          print(paste(nrow(keggResult$stastic), " KEGG pathways found") 
+          print(paste(nrow(keggResult$stastic), " KEGG pathways found"))
         keggResult$stastic <-
           keggResult$stastic[order(keggResult$stastic$pvalueAdj),]
 
