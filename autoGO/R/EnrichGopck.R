@@ -201,7 +201,7 @@ automatic_GO_enrich <-
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
 
       if (KEGG) {
-        print("Running KEGG")
+        print("Running KEGG!")
         #Run Keggprofile
         keggResult <-
           KEGGprofile::find_enriched_pathway(
