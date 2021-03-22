@@ -197,7 +197,7 @@ automatic_GO_enrich <-
       genes <-
         DEGTable$Entrez[!(is.na(DEGTable$Entrez))]
       
-        print(paste(nrow(genes)," genes mapped")
+        print(paste(nrow(genes)," genes mapped"))
       genes <- dplyr::distinct(as.data.frame(genes), .keep_all = TRUE)
               
         if(nrow(genes)>0){
