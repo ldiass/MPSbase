@@ -150,8 +150,7 @@ automatic_GO_enrich <-
       print(paste("File loaded:", filename))
       #Input datafile
       DEGTable <- read.delim(filename, stringsAsFactors = FALSE, sep=tableseps)
-      DEGTable<- as.data.frame(DEGTable)
-        
+              
       #Check if the table must be reordered
       if(!orderby==""){
       #Find number of orderby column
@@ -166,7 +165,10 @@ automatic_GO_enrich <-
       if (maxnumberofgenes < nrow(DEGTable)) {
         DEGTable <- DEGTable[1:maxnumberofgenes,]
       }
-
+     
+      # Make sure DEGTable is a dataframe  
+      DEGTable<- as.data.frame(DEGTable)
+      
       #Find the column of Gene IDs on the dataset
       if (!(genekeyPos == 0)) {
         geneIDAdvise(genekeyPos)
