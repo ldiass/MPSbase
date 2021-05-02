@@ -70,7 +70,7 @@ if(napercent==0 && (length(fit$coefficients[is.na(fit$coefficients)])==0)){
   lfc<-1.5
   trend=TRUE
   
-  ###################################################################
+  ###########AJUSTE DA FUNÇÂO DO Toptreat do LIMMA COM NA.OMIT##############
   sv<-squeezeVar(fit$sigma^2,fit$df.residual,covariate = fit$Amean,robust = robust, winsor.tail.p=c(0.05,0.1))
   fit$df.prior <- sv$df.prior
   fit$s2.prior <- sv$var.prior
@@ -88,7 +88,7 @@ if(napercent==0 && (length(fit$coefficients[is.na(fit$coefficients)])==0)){
   fit$t <- array(0,dim(coefficients),dimnames=dimnames(coefficients))
   fit$p.value <- pt(tstat.right, df=df.total,lower.tail=FALSE) + pt(tstat.left,df=df.total,lower.tail=FALSE)
   tstat.right <- pmax(tstat.right,0)
-  ####NA OMIT que faltava e cagava TUDO#####
+  ####################################
   coefficients<-na.omit(coefficients)
   ##########################################
   fc.up <- (coefficients > lfc)
